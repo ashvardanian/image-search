@@ -1,3 +1,4 @@
+import io
 import requests
 from PIL import Image
 
@@ -12,11 +13,11 @@ contents = [
 client = Client()
 
 for idx, content in enumerate(contents):
-    image = Image.open(requests.get(content[1]).content)
-    client.add(label=idx, description=content[0], photo=image)
+    image = Image.open(io.BytesIO(requests.get(content[1]).content))
+    client.add(label=idx, photo=image)
 
 query = 'pink panda'
 response = client.search(query)
-print(f'Closest results to "query" is:')
-for idx, label in enumerate(list(response.numpy)):
+print(f'Closest results to "{query}" is:')
+for idx, label in enumerate(response.numpy[0]):
     print(f'- {idx}. {contents[label]}')
